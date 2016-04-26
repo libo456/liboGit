@@ -2,13 +2,94 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PRUEBA"
-        android:id="@+id/textView1_hor"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="59dp" />
+        android:weightSum="1">
+
+        <FrameLayout
+            android:layout_width="168dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/frameLayout1_h"
+            android:layout_weight="0.42" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true">
+
+        <ImageView
+            android:layout_width="101dp"
+            android:layout_height="113dp"
+            android:src="@drawable/sunglasses"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/imageView1_h"
+            android:layout_weight="0.05"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/imageView">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:text="Today"
+                android:id="@+id/textView1_h" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:text="May06"
+                android:id="@+id/textView2_h"
+                android:layout_below="@+id/textView1_h"
+                android:layout_alignParentStart="true" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/textView1_h"
+                android:layout_marginLeft="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="60dp"
+                    android:textColor="@color/black"
+                    android:text="6º"
+                    android:id="@+id/textView3_h" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dp"
+                    android:text="6º"
+                    android:id="@+id/textView4_h" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15dp"
+                    android:text="Humidity 60%"
+                    android:id="@+id/textView5_h" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>
