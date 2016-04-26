@@ -17,4 +17,6 @@
         </activity>
     </application>
 
+    <users-permission android:name="android.permission.INTERNET" />
+
 </manifest>
