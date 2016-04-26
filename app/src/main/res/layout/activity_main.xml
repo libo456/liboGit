@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.sitesas.clima.MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:text="Today, June 19"
+        android:textColor="@color/black"
+        android:id="@+id/textView1_main"
+        android:layout_weight="0.01"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="90dp"
+        android:textColor="@color/black"
+        android:text="20º"
+        android:id="@+id/textView2_main"
+        android:layout_weight="0.01"
+        android:layout_below="@+id/textView1_main"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50dp"
+        android:textColor="@color/black"
+        android:text="13º"
+        android:id="@+id/textView3_main"
+        android:layout_weight="0.01"
+        android:layout_below="@+id/textView2_main"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/textView3_main">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listView1_main" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView1_main"
+        android:layout_alignBottom="@+id/textView3_main"
+        android:weightSum="1"
+        android:layout_marginLeft="40dp">
+
+        <ImageView
+            android:layout_width="101dp"
+            android:layout_height="113dp"
+            android:src="@drawable/Sunglasses"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/imageView1_main"
+            android:layout_weight="0.05"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/imageView1_main"
+            android:layout_alignEnd="@+id/imageView1_main"
+            android:id="@+id/linearLayout">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+
+                android:textColor="@color/black"
+                android:text="Clear"
+                android:id="@+id/textView"
+                android:layout_below="@+id/imageView1_main"
+                android:layout_alignParentEnd="true"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
