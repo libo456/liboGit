@@ -112,6 +112,20 @@ public class ForecastFragment extends Fragment {
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
+        private String formatHighLows(double high, double low, String unitType) {
+
+            if(unitType.equals(getString(R.string.pref_units_imperial))){
+                high = (high*1.8) + 32;
+                low = (low*1.8) + 32;
+            }else if(!unitType.equals(getString(R.string.pref_units_metric))){
+                Log.d(LOG_TAG, "Unit type not found");
+            }
+
+            double highRounded = Math.round(high);
+            double lowRounded = Math.round(low);
+            return highRounded + "/" + lowRounded;
+        }
+
         @Override
         protected String[] doInBackground(String... params){
             // if ther's no zip code, there's nothing to look up. Verify size of params
@@ -205,55 +219,52 @@ public class ForecastFragment extends Fragment {
                 }
             }
         }
-    }
 
-    private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays) throws JSONException{
-        // These are the names of the JSON objects that need to be extracted
-        final String OWM_LIST = "list";
-        final String OWM_WEATHER = "weather";
-        final String OWM_TEMPERATURE = "temp";
-        final String OWM_MAX = "max";
-        final String OWM_MIN = "min";
-        final String OWM_DESCRIPTION = "main";
+        private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays) throws JSONException{
+            // These are the names of the JSON objects that need to be extracted
+            final String OWM_LIST = "list";
+            final String OWM_WEATHER = "weather";
+            final String OWM_TEMPERATURE = "temp";
+            final String OWM_MAX = "max";
+            final String OWM_MIN = "min";
+            final String OWM_DESCRIPTION = "main";
 
-        JSONObject forecastJson = new JSONObject(forecastJsonStr);
-        JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
+            JSONObject forecastJson = new JSONObject(forecastJsonStr);
+            JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
-        Calendar gc = new GregorianCalendar();
+            Calendar gc = new GregorianCalendar();
 
-        String[] resultStrs = new String[numDays];
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String unitType = sharedPrefs.getString( getString(R.string.pref_units_key),
+                    getString(R.string.pref_units_metric));
 
-        for(int i = 0; i < weatherArray.length(); i++){
-            String day;
-            String description;
-            String highAndLow;
+            String[] resultStrs = new String[numDays];
 
-            JSONObject dayForecast = weatherArray.getJSONObject(i);
-            long dateTime;
+            for(int i = 0; i < weatherArray.length(); i++){
+                String day;
+                String description;
+                String highAndLow;
 
-            day = gc.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH);
-            gc.add(Calendar.DAY_OF_WEEK, 1);
+                JSONObject dayForecast = weatherArray.getJSONObject(i);
+                long dateTime;
 
-            JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
-            description = weatherObject.getString(OWM_DESCRIPTION);
+                day = gc.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH);
+                gc.add(Calendar.DAY_OF_WEEK, 1);
 
-            JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
+                JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
+                description = weatherObject.getString(OWM_DESCRIPTION);
 
-            double high = temperatureObject.getDouble(OWM_MAX);
-            double low = temperatureObject.getDouble(OWM_MIN);
+                JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
 
-            highAndLow = formatHighLows(high, low);
-            resultStrs[i] = day + " -  " + description + " - " + highAndLow;
-            Log.v("JsonObject", resultStrs[i]);
+                double high = temperatureObject.getDouble(OWM_MAX);
+                double low = temperatureObject.getDouble(OWM_MIN);
+
+                highAndLow = formatHighLows(high, low, unitType);
+                resultStrs[i] = day + " -  " + description + " - " + highAndLow;
+                Log.v("JsonObject", resultStrs[i]);
+            }
+
+            return resultStrs;
         }
-
-        return resultStrs;
-    }
-
-    private String formatHighLows(double high, double low) {
-        double highRounded = Math.round(high);
-        double lowRounded = Math.round(low);
-
-        return highRounded + "/" + lowRounded;
     }
 }
