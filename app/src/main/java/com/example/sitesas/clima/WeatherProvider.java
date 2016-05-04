@@ -112,7 +112,6 @@ public class WeatherProvider extends ContentProvider {
         return false;
     }
 
-    @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor retCursor;
@@ -131,7 +130,7 @@ public class WeatherProvider extends ContentProvider {
                 break;
             case LOCATION:
                 retCursor = mOpenHelper.getReadableDatabase().query(
-                        WeatherContract.WeatherEntry.TABLE_NAME,
+                        WeatherContract.LocationEntry.TABLE_NAME,
                         projection, selection, selectionArgs, null, null, sortOrder
                 );
                 break;
@@ -143,7 +142,6 @@ public class WeatherProvider extends ContentProvider {
         return retCursor;
     }
 
-    @Nullable
     @Override
     public String getType(Uri uri) {
         // Use the Uri Matcher to determine what kind of URI this is.
@@ -162,15 +160,36 @@ public class WeatherProvider extends ContentProvider {
         }
     }
 
-    @Nullable
+    //Add the ability to insert Locations
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        return null;
-    }
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        Uri returnUri;
 
-    @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        switch (match) {
+            case WEATHER: {
+                normalizeDate(values);
+                long _id = db.insert(WeatherContract.WeatherEntry.TABLE_NAME, null, values);
+                if ( _id > 0 )
+                    returnUri = WeatherContract.WeatherEntry.buildWeatherUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case LOCATION: {
+                long _id = db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, values);
+                if ( _id > 0 )
+                    returnUri = WeatherContract.LocationEntry.buildLocationUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return returnUri;
     }
 
     @Override
@@ -201,7 +220,15 @@ public class WeatherProvider extends ContentProvider {
         return rowsDeleted;
     }
 
-    /*public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs){
+    private void normalizeDate(ContentValues values) {
+        // normalize the date value
+        if (values.containsKey(WeatherContract.WeatherEntry.COLUMN_DATE)) {
+            long dateValue = values.getAsLong(WeatherContract.WeatherEntry.COLUMN_DATE);
+            values.put(WeatherContract.WeatherEntry.COLUMN_DATE, WeatherContract.normalizeDate(dateValue));
+        }
+    }
+
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs){
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
@@ -213,7 +240,15 @@ public class WeatherProvider extends ContentProvider {
                         selectionArgs);
                 break;
             case LOCATION:
-                rowsUpdated = db.update(WeatherContract.WeatherEntry.TABLE_NE)
+                rowsUpdated = db.update(WeatherContract.LocationEntry.TABLE_NAME, values, selection,
+                        selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-    }*/
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
+    }
 }
