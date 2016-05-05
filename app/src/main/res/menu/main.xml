@@ -15,4 +15,9 @@
         android:title="Map Lacation"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/notification"
+        android:title="Notification"
+        app:showAsAction="never" />
+
 </menu>

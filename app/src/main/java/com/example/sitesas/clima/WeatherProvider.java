@@ -228,12 +228,12 @@ public class WeatherProvider extends ContentProvider {
         }
     }
 
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs){
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
 
-        switch(match){
+        switch (match) {
             case WEATHER:
                 normalizeDate(values);
                 rowsUpdated = db.update(WeatherContract.WeatherEntry.TABLE_NAME, values, selection,
@@ -250,5 +250,6 @@ public class WeatherProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsUpdated;
+
     }
 }
